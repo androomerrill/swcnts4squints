@@ -2,6 +2,13 @@ from __future__ import division
 
 from fractions import gcd
 from math import acos, degrees, floor, pi, sqrt
+from glpk.glpkpi import glp_create_prob, glp_load_matrix, \
+        glp_set_obj_dir, glp_add_rows, glp_set_row_name, \
+        glp_set_row_bnds, glp_add_cols, glp_set_col_name, \
+        glp_set_col_bnds, glp_set_obj_coef, glp_set_col_kind, \
+        glp_intopt, glp_simplex, glp_mip_col_val, glp_mip_obj_val, \
+        GLP_MIN, GLP_MAX, GLP_UP, GLP_LO, GLP_DB, GLP_FX, \
+        GLP_IV, GLP_MPS_FILE, intArray, doubleArray
 
 #from moldycode.misc.constants import elements, mass_units
 #from moldycode.tools.nanogen.nanotube import Nanotube
@@ -19,15 +26,20 @@ class S4SModel(object):
 
         self.cgs_mass_C = mass_C * gram_per_Dalton
 
-        self._ccbond = None
-        self._n = None
-        self._m = None
-        self._Ch = None
-        self._dt = None
-        self._T = None
+        self._ccbond = 1.421
+        self._n = 10
+        self._m = 10
+        self._d = self.compute_d()
+        self._dR = self.compute_dR()
+
+        self._Ch = self.compute_Ch()
+        self._T = self.compute_T()
+
+        #self._Ch = None
+        #self._T = None
+
         self._L = None
-        self._d = None
-        self._dR = None
+        self._dt = None
         self._chiral_angle = None
         self._t1 = None
         self._t2 = None
@@ -39,15 +51,23 @@ class S4SModel(object):
         self._Natoms_per_tube = None
         self._tube_mass = None
 
+        self._p = None
+        self._q = None
+        self._M = None
+        self._R = None
+        self._N = None
+
         # bundle parameters
         self._bundle_density = None
 
 
     def init(self):
-        self._n = 10
-        self._m = 0
-        self._ccbond = 1.421
-        self._L = 10.
+        #self._n = 10
+        #self._m = 0
+        #self._ccbond = 1.421
+        #self._L = 10.
+        self._Nz_unit_cells = 1
+        self._update_L()
         self._update_params()
 
     @property
@@ -57,6 +77,9 @@ class S4SModel(object):
     @n.setter
     def n(self, value):
         self._n = value
+        self._update_Ch_dependents()
+        self._update_Nz_unit_cells(Ncells=1)
+        self._update_L()
         self._update_params()
 
     @property
@@ -66,6 +89,9 @@ class S4SModel(object):
     @m.setter
     def m(self, value):
         self._m = value
+        self._update_Ch_dependents()
+        self._update_Nz_unit_cells(Ncells=1)
+        self._update_L()
         self._update_params()
 
     @property
@@ -141,6 +167,18 @@ class S4SModel(object):
         return self._t2
 
     @property
+    def p(self):
+        return self._p
+
+    @property
+    def q(self):
+        return self._q
+
+    @property
+    def M(self):
+        return self._M
+
+    @property
     def tube_mass(self):
         return self._tube_mass
 
@@ -150,9 +188,24 @@ class S4SModel(object):
 
     def _update_bond_length_dependents(self):
         self._Ch = self.compute_Ch()
+        self._dt = self._Ch / pi
         self._bundle_density = self.compute_bundle_density()
         self._T = self.compute_T()
         self.notify_observers()
+
+    def _update_Ch_dependents(self):
+        self._d = self.compute_d()
+        self._dR = self.compute_dR()
+        self._Ch = self.compute_Ch()
+        self._dt = self._Ch / pi
+        self._T = self.compute_T()
+        self._Nhexs_per_cell = self.compute_Nhexs_per_cell()
+        self._Natoms_per_cell = self.compute_Natoms_per_cell()
+        self._bundle_density = self.compute_bundle_density()
+        self._t1 = self.compute_t1()
+        self._t2 = self.compute_t2()
+        self._M, self._p, self._q = self.compute_R()
+        self._chiral_angle = self.compute_chiral_angle()
 
     def _update_L_dependents(self):
         pass
@@ -160,9 +213,12 @@ class S4SModel(object):
     def _update_Nz_unit_cells_dependents(self):
         pass
 
-    def _update_Nz_unit_cells(self):
-        #self._Nz_unit_cells = int(ceil(10 * self._L / self._T))
-        self._Nz_unit_cells = 10 * self._L / self._T
+    def _update_Nz_unit_cells(self, Ncells=None):
+        if Ncells is None:
+            #self._Nz_unit_cells = int(ceil(10 * self._L / self._T))
+            self._Nz_unit_cells = 10 * self._L / self._T
+        else:
+            self._Nz_unit_cells = Ncells
         self._update_Natoms_per_tube()
         self._update_tube_mass()
         #self._update_L()
@@ -189,15 +245,17 @@ class S4SModel(object):
         #self._T = Nanotube.compute_T(Ch=self._Ch, dR=self._dR)
         self._d = self.compute_d()
         self._dR = self.compute_dR()
+        self._Nhexs_per_cell = self.compute_Nhexs_per_cell()
         self._Natoms_per_cell = self.compute_Natoms_per_cell()
         self._bundle_density = self.compute_bundle_density()
         self._t1 = self.compute_t1()
         self._t2 = self.compute_t2()
+        self._M, self._p, self._q = self.compute_R()
         self._Ch = self.compute_Ch()
         self._dt = self._Ch / pi
         self._chiral_angle = self.compute_chiral_angle()
         self._T = self.compute_T()
-        self._update_Nz_unit_cells()
+        #self._update_Nz_unit_cells()
         self.notify_observers()
 
     def compute_d(self):
@@ -259,7 +317,48 @@ class S4SModel(object):
         n = self._n
         m = self._m
         dR = self._dR
-        return 4 * (n**2 + m**2 + n*m) / dR
+        return int(4 * (n**2 + m**2 + n*m) / dR)
+
+    def compute_Nhexs_per_cell(self):
+        n = self._n
+        m = self._m
+        dR = self._dR
+        return int(2 * (n**2 + m**2 + n*m) / dR)
+
+    def compute_R(self):
+        size = 1000+1
+        ia = intArray(size)
+        ja = intArray(size)
+        ar = doubleArray(size)
+        lp = glp_create_prob()
+        glp_set_obj_dir(lp, GLP_MIN)
+        glp_add_rows(lp, 2)
+        glp_set_row_name(lp, 1, "N")
+        glp_set_row_bnds(lp, 1, GLP_DB, 1, self._Nhexs_per_cell)
+        glp_set_row_name(lp, 2, "1")
+        glp_set_row_bnds(lp, 2, GLP_FX, 1, 1)
+        glp_add_cols(lp, 2)
+        glp_set_col_name(lp, 1, "p")
+        glp_set_col_bnds(lp, 1, GLP_LO, 1, 0)
+        glp_set_obj_coef(lp, 1, self._m)
+        glp_set_col_name(lp, 2, "q")
+        glp_set_col_bnds(lp, 2, GLP_UP, 0, 0)
+        glp_set_obj_coef(lp, 2, -self._n)
+        glp_set_col_kind(lp, 1, GLP_IV)
+        glp_set_col_kind(lp, 2, GLP_IV)
+        ia[1]=1; ja[1]=1; ar[1]=self._m
+        ia[2]=1; ja[2]=2; ar[2]=-self._n
+        ia[3]=2; ja[3]=1; ar[3]=-self._t2
+        ia[4]=2; ja[4]=2; ar[4]=self._t1
+
+        glp_load_matrix(lp, 4, ia, ja, ar)
+        glp_simplex(lp, None)
+        glp_intopt(lp, None)
+        M = int(glp_mip_obj_val(lp))
+        p = int(glp_mip_col_val(lp, 1))
+        q = int(glp_mip_col_val(lp, 2))
+        del lp
+        return (M, p, q)
 
     def register_observer(self, observer):
         self.observers.append(observer)

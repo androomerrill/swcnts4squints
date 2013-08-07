@@ -11,7 +11,7 @@ class S4SController(object):
 
         self.view = S4SView(self, self.model)
         self.model.init()
-        self.view.init()
+        self.view.show()
         app.exec_()
 
     def refresh_view(self):

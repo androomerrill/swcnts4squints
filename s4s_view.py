@@ -80,5 +80,8 @@ class S4SView(QMainWindow, Ui_S4S):
         self.Natoms_per_tube_lineEdit.setText(str(self.model.Natoms_per_tube))
         self.t1_lineEdit.setText(str(self.model.t1))
         self.t2_lineEdit.setText(str(self.model.t2))
+        self.p_lineEdit.setText(str(self.model.p))
+        self.q_lineEdit.setText(str(self.model.q))
+        self.M_lineEdit.setText(str(self.model.M))
         self.mass_lineEdit.setText('{:.4e}'.format(self.model.tube_mass))
         self.density_lineEdit.setText('{:.3f}'.format(self.model.bundle_density))
