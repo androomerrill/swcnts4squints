@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'swcnts4squints2.ui'
 #
-# Created: Wed Aug  7 03:19:40 2013
+# Created: Tue Sep  3 20:59:15 2013
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -588,6 +588,15 @@ class Ui_S4S(object):
         self.stackedWidget.addWidget(self.stackedWidgetPage1)
         self.page_3 = QtGui.QWidget()
         self.page_3.setObjectName(_fromUtf8("page_3"))
+        self.label_15 = QtGui.QLabel(self.page_3)
+        self.label_15.setGeometry(QtCore.QRect(20, 20, 350, 40))
+        self.label_15.setMinimumSize(QtCore.QSize(0, 40))
+        self.label_15.setMaximumSize(QtCore.QSize(350, 40))
+        font = QtGui.QFont()
+        font.setPointSize(25)
+        self.label_15.setFont(font)
+        self.label_15.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_15.setObjectName(_fromUtf8("label_15"))
         self.stackedWidget.addWidget(self.page_3)
         self.verticalLayout_7.addWidget(self.stackedWidget)
         S4S.setCentralWidget(self.centralwidget)
@@ -606,7 +615,7 @@ class Ui_S4S(object):
         self.menubar.addAction(self.menuFile.menuAction())
 
         self.retranslateUi(S4S)
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(S4S)
 
     def retranslateUi(self, S4S):
@@ -637,6 +646,7 @@ class Ui_S4S(object):
         self.label_21.setText(_translate("S4S", "<html><head/><body><p>p =</p></body></html>", None))
         self.label_22.setText(_translate("S4S", "<html><head/><body><p>q =</p></body></html>", None))
         self.label_23.setText(_translate("S4S", "<html><head/><body><p>M =</p></body></html>", None))
+        self.label_15.setText(_translate("S4S", "<html><head/><body><p>N<span style=\" vertical-align:sub;\">tags</span> = # Taggable Sites</p></body></html>", None))
         self.menuFile.setTitle(_translate("S4S", "File", None))
         self.menuFile_Notes_on_Numbers.setText(_translate("S4S", "Notes on Numbers", None))
 
