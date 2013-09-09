@@ -365,8 +365,8 @@ class S4SModel(object):
             p = int(glp_mip_col_val(lp, 1))
             q = int(glp_mip_col_val(lp, 2))
             del lp
-            #return (M, p, q)
-            return (np.nan, np.nan, np.nan)
+            return (M, p, q)
+            #return (np.nan, np.nan, np.nan)
         else:
             return (None, None, None)
 
