@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'swcnts4squints2.ui'
 #
-# Created: Tue Sep  3 20:59:15 2013
+# Created: Sat Sep 21 14:39:51 2013
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,7 +26,7 @@ except AttributeError:
 class Ui_S4S(object):
     def setupUi(self, S4S):
         S4S.setObjectName(_fromUtf8("S4S"))
-        S4S.resize(816, 537)
+        S4S.resize(815, 537)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -601,7 +601,7 @@ class Ui_S4S(object):
         self.verticalLayout_7.addWidget(self.stackedWidget)
         S4S.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(S4S)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 816, 25))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 815, 25))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName(_fromUtf8("menuFile"))
@@ -615,7 +615,7 @@ class Ui_S4S(object):
         self.menubar.addAction(self.menuFile.menuAction())
 
         self.retranslateUi(S4S)
-        self.stackedWidget.setCurrentIndex(1)
+        self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(S4S)
 
     def retranslateUi(self, S4S):
