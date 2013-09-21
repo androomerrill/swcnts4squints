@@ -1,6 +1,6 @@
 from PyQt4.QtGui import QApplication
 
-from swcnts4squints.s4s_view import S4SView
+from s4s_view import S4SView
 
 class S4SController(object):
 

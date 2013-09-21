@@ -69,6 +69,7 @@ setup(name='swcnts4squints',
           'gui_scripts': [
               'swcnts4squints = swcnts4squints.swcnts4squints:main',
               ]
-      }
+      },
+      **extra_options
 )
 

@@ -2,8 +2,8 @@
 
 import sys
 
-from swcnts4squints.s4s_controller import S4SController
-from swcnts4squints.s4s_model import S4SModel
+from s4s_controller import S4SController
+from s4s_model import S4SModel
 
 class S4S(object):
 

@@ -1,7 +1,7 @@
 from PyQt4.QtCore import pyqtSlot
 from PyQt4.QtGui import QMainWindow
 
-from swcnts4squints.ui_s4s import Ui_S4S
+from ui_s4s import Ui_S4S
 
 
 class S4SView(QMainWindow, Ui_S4S):
