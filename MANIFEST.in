@@ -1,0 +1,4 @@
+include MANIFEST.in
+include *.md
+include *.txt
+recursive-include images *
