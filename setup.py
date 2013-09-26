@@ -15,6 +15,7 @@ if sys.platform == 'darwin':
         setup_requires=['py2app'],
         app=[mainscript],
         options=dict(py2app=dict(argv_emulation=True,
+                                 iconfile='images/swcnts4squints.icns',
                                  includes=['sip',
                                            'PyQt4.QtCore',
                                            'PyQt4.QtGui'])),
