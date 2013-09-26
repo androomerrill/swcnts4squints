@@ -10,39 +10,25 @@ import sys
 extra_options = None
 
 if sys.platform == 'darwin':
-    mainscript = 'swcnts4squints/swcnts4squints.py'
-    extra_options = dict(
-        setup_requires=['py2app'],
-        app=[mainscript],
-        options=dict(py2app=dict(argv_emulation=True,
-                                 iconfile='images/swcnts4squints.icns',
-                                 includes=['sip',
-                                           'PyQt4.QtCore',
-                                           'PyQt4.QtGui'])),
-    )
+    extra_options = dict(setup_requires=['py2app'],
+                         app=['swcnts4squints/swcnts4squints.py'],
+                         options=dict(py2app=dict(argv_emulation=True,
+                                      iconfile='images/swcnts4squints.icns',
+                                      includes=['sip', 'PyQt4.QtCore',
+                                                'PyQt4.QtGui'])))
 elif sys.platform == 'win32':
-    mainscript = 'swcnts4squints/swcnts4squints.py'
-    extra_options = dict(
-        setup_requires=['py2exe'],
-        #app=[mainscript],
-        console=[mainscript],
-        options={
-            'py2exe': {
-                "bundle_files": 1,
-                "dll_excludes": [
-                    "MSVCP90.dll",
-                    "MSWSOCK.dll",
-                    "mswsock.dll",
-                    "powrprof.dll"],
-                "includes": [
-                    'sip',
-                    'PyQt4.QtCore',
-                    'PyQt4.QtGui'],
-            },
-        },
-        data_files=[('phonon_backend',
-              ['C:\Python27\Lib\site-packages\PyQt4\plugins\phonon_backend\phonon_ds94.dll'])]
-    )
+    extra_options = dict(setup_requires=['py2exe'],
+                         console=['swcnts4squints/swcnts4squints.py'],
+                         options={'py2exe': {"bundle_files": 1,
+                                    "dll_excludes": ["MSVCP90.dll",
+                                                     "MSWSOCK.dll",
+                                                     "mswsock.dll",
+                                                     "powrprof.dll"],
+                                    "includes": ["sip", "PyQt4.QtCore",
+                                                 "PyQt4.QtGui"]}},
+                         windows=[{"icon_resources": 
+                                    [(1, "images/swcnts4squints.ico")]}],
+                         data_files=[("phonon_backend", ["C:\Python27\Lib\site-packages\PyQt4\plugins\phonon_backend\phonon_ds94.dll"])])
 else:
     extra_options = {}
     #extra_options = dict(
