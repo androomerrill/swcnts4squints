@@ -1,20 +1,7 @@
 from __future__ import division
 
-import sys
-
 from fractions import gcd
 from math import acos, degrees, floor, pi, sqrt
-
-import numpy as np
-
-if sys.platform == 'linux2':
-    from glpk.glpkpi import glp_create_prob, glp_load_matrix, \
-            glp_set_obj_dir, glp_add_rows, glp_set_row_name, \
-            glp_set_row_bnds, glp_add_cols, glp_set_col_name, \
-            glp_set_col_bnds, glp_set_obj_coef, glp_set_col_kind, \
-            glp_intopt, glp_simplex, glp_mip_col_val, glp_mip_obj_val, \
-            GLP_MIN, GLP_MAX, GLP_UP, GLP_LO, GLP_DB, GLP_FX, \
-            GLP_IV, GLP_MPS_FILE, intArray, doubleArray
 
 #from moldycode.misc.constants import elements, mass_units
 #from moldycode.tools.nanogen.nanotube import Nanotube
@@ -185,6 +172,10 @@ class S4SModel(object):
         return self._M
 
     @property
+    def N(self):
+        return self._N
+
+    @property
     def tube_mass(self):
         return self._tube_mass
 
@@ -205,7 +196,7 @@ class S4SModel(object):
         self._Ch = self.compute_Ch()
         self._dt = self._Ch / pi
         self._T = self.compute_T()
-        self._Nhexs_per_cell = self.compute_Nhexs_per_cell()
+        self._N = self._Nhexs_per_cell = self.compute_Nhexs_per_cell()
         self._Natoms_per_cell = self.compute_Natoms_per_cell()
         self._bundle_density = self.compute_bundle_density()
         self._t1 = self.compute_t1()
@@ -251,7 +242,7 @@ class S4SModel(object):
         #self._T = Nanotube.compute_T(Ch=self._Ch, dR=self._dR)
         self._d = self.compute_d()
         self._dR = self.compute_dR()
-        self._Nhexs_per_cell = self.compute_Nhexs_per_cell()
+        self._N = self._Nhexs_per_cell = self.compute_Nhexs_per_cell()
         self._Natoms_per_cell = self.compute_Natoms_per_cell()
         self._bundle_density = self.compute_bundle_density()
         self._t1 = self.compute_t1()
@@ -332,43 +323,21 @@ class S4SModel(object):
         return int(2 * (n**2 + m**2 + n*m) / dR)
 
     def compute_R(self):
-        if sys.platform == 'linux2':
-            size = 1000+1
-            ia = intArray(size)
-            ja = intArray(size)
-            ar = doubleArray(size)
-            lp = glp_create_prob()
-            glp_set_obj_dir(lp, GLP_MIN)
-            glp_add_rows(lp, 2)
-            glp_set_row_name(lp, 1, "N")
-            glp_set_row_bnds(lp, 1, GLP_DB, 1, self._Nhexs_per_cell)
-            glp_set_row_name(lp, 2, "1")
-            glp_set_row_bnds(lp, 2, GLP_FX, 1, 1)
-            glp_add_cols(lp, 2)
-            glp_set_col_name(lp, 1, "p")
-            glp_set_col_bnds(lp, 1, GLP_LO, 1, 0)
-            glp_set_obj_coef(lp, 1, self._m)
-            glp_set_col_name(lp, 2, "q")
-            glp_set_col_bnds(lp, 2, GLP_UP, 0, 0)
-            glp_set_obj_coef(lp, 2, -self._n)
-            glp_set_col_kind(lp, 1, GLP_IV)
-            glp_set_col_kind(lp, 2, GLP_IV)
-            ia[1]=1; ja[1]=1; ar[1]=self._m
-            ia[2]=1; ja[2]=2; ar[2]=-self._n
-            ia[3]=2; ja[3]=1; ar[3]=-self._t2
-            ia[4]=2; ja[4]=2; ar[4]=self._t1
+        self._p = None
+        self._q = None
+        self._M = None
 
-            glp_load_matrix(lp, 4, ia, ja, ar)
-            glp_simplex(lp, None)
-            glp_intopt(lp, None)
-            M = int(glp_mip_obj_val(lp))
-            p = int(glp_mip_col_val(lp, 1))
-            q = int(glp_mip_col_val(lp, 2))
-            del lp
-            return (M, p, q)
-            #return (np.nan, np.nan, np.nan)
-        else:
-            return (None, None, None)
+        for p in range(0, self.t1 + 1):
+            for q in range(self.t2, 0 + 1):
+                R = self.t1 * q - self.t2 * p
+                if R == 1:
+                    M = self.m * p - self.n * q
+                    if M > 0 and M <= self.N:
+                        self._p = p
+                        self._q = q
+                        self._M = M
+
+        return (self._M, self._p, self._q)
 
     def register_observer(self, observer):
         self.observers.append(observer)
