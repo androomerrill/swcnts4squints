@@ -50,7 +50,6 @@ if sys.platform == 'win32':
           include_package_data=True,
           #exclude_package_data={'': ['README.md']},
           #zip_safe=False,
-          install_requires=['numpy', 'scipy'],
           entry_points={
               'gui_scripts': [
                   'swcnts4squints = swcnts4squints:main',
@@ -86,8 +85,7 @@ else:
           #package_dir={'': 'swcnts4squints'},
           include_package_data=True,
           #exclude_package_data={'': ['README.md']},
-          #zip_safe=False,
-          install_requires=['numpy', 'scipy'],
+          zip_safe=True,
           entry_points={
               'gui_scripts': [
                   'swcnts4squints = swcnts4squints.swcnts4squints:main',
