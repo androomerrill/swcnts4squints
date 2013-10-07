@@ -326,16 +326,24 @@ class S4SModel(object):
         self._p = None
         self._q = None
         self._M = None
+        n = self.n
+        m = self.m
+        t1 = self.t1
+        t2 = self.t2
+        N = self.N
 
-        for p in range(0, self.n + self.t1 + 1):
-            for q in range(self.t2, self.m + 1):
-                R = self.t1 * q - self.t2 * p
+        for q in range(t2, m + 1):
+            for p in range(0, n + t1 + 1):
+                R = t1 * q - t2 * p
                 if R == 1:
-                    M = self.m * p - self.n * q
-                    if M > 0 and M <= self.N:
+                    M = m * p - n * q
+                    if M > 0 and M <= N:
                         self._p = p
                         self._q = q
                         self._M = M
+                        print('found M = {}'.format(M),
+                              'found p = {}'.format(p),
+                              'found q = {}\n'.format(q))
 
         return (self._M, self._p, self._q)
 
