@@ -328,7 +328,7 @@ class S4SModel(object):
         self._M = None
 
         for p in range(0, self.t1 + 1):
-            for q in range(self.t2, 0 + 1):
+            for q in range(self.t2, 1):
                 R = self.t1 * q - self.t2 * p
                 if R == 1:
                     M = self.m * p - self.n * q
