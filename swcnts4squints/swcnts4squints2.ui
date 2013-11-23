@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>867</width>
+    <width>733</width>
     <height>733</height>
    </rect>
   </property>
@@ -690,19 +690,19 @@
                    <widget class="QLabel" name="label_12">
                     <property name="minimumSize">
                      <size>
-                      <width>300</width>
+                      <width>275</width>
                       <height>40</height>
                      </size>
                     </property>
                     <property name="maximumSize">
                      <size>
-                      <width>300</width>
+                      <width>275</width>
                       <height>40</height>
                      </size>
                     </property>
                     <property name="font">
                      <font>
-                      <pointsize>20</pointsize>
+                      <pointsize>25</pointsize>
                      </font>
                     </property>
                     <property name="text">
@@ -773,13 +773,13 @@
                  <widget class="QRadioButton" name="fix_Ncells_radioButton">
                   <property name="minimumSize">
                    <size>
-                    <width>75</width>
+                    <width>60</width>
                     <height>0</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>75</width>
+                    <width>60</width>
                     <height>16777215</height>
                    </size>
                   </property>
@@ -819,13 +819,13 @@
                    <widget class="QLabel" name="label_43">
                     <property name="minimumSize">
                      <size>
-                      <width>300</width>
+                      <width>275</width>
                       <height>40</height>
                      </size>
                     </property>
                     <property name="maximumSize">
                      <size>
-                      <width>300</width>
+                      <width>275</width>
                       <height>40</height>
                      </size>
                     </property>
@@ -878,7 +878,7 @@
                      <widget class="QLabel" name="label_44">
                       <property name="font">
                        <font>
-                        <pointsize>25</pointsize>
+                        <pointsize>20</pointsize>
                        </font>
                       </property>
                       <property name="text">
@@ -914,13 +914,13 @@
                  <widget class="QRadioButton" name="fix_tube_length_radioButton">
                   <property name="minimumSize">
                    <size>
-                    <width>75</width>
+                    <width>60</width>
                     <height>0</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>75</width>
+                    <width>60</width>
                     <height>16777215</height>
                    </size>
                   </property>
@@ -1791,7 +1791,7 @@
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>16</width>
+            <width>0</width>
             <height>20</height>
            </size>
           </property>
@@ -1843,7 +1843,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>867</width>
+     <width>733</width>
      <height>25</height>
     </rect>
    </property>

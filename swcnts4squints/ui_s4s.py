@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'swcnts4squints2.ui'
 #
-# Created: Sat Nov 23 02:03:20 2013
+# Created: Sat Nov 23 02:18:36 2013
 #      by: PyQt4 UI code generator 4.10.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,7 +26,7 @@ except AttributeError:
 class Ui_S4S(object):
     def setupUi(self, S4S):
         S4S.setObjectName(_fromUtf8("S4S"))
-        S4S.resize(867, 733)
+        S4S.resize(733, 733)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -325,10 +325,10 @@ class Ui_S4S(object):
         self.verticalLayout_2 = QtGui.QVBoxLayout()
         self.verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
         self.label_12 = QtGui.QLabel(self.stackedWidgetPage1)
-        self.label_12.setMinimumSize(QtCore.QSize(300, 40))
-        self.label_12.setMaximumSize(QtCore.QSize(300, 40))
+        self.label_12.setMinimumSize(QtCore.QSize(275, 40))
+        self.label_12.setMaximumSize(QtCore.QSize(275, 40))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(25)
         self.label_12.setFont(font)
         self.label_12.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.label_12.setObjectName(_fromUtf8("label_12"))
@@ -356,8 +356,8 @@ class Ui_S4S(object):
         self.line_6.setObjectName(_fromUtf8("line_6"))
         self.horizontalLayout_49.addWidget(self.line_6)
         self.fix_Ncells_radioButton = QtGui.QRadioButton(self.stackedWidgetPage1)
-        self.fix_Ncells_radioButton.setMinimumSize(QtCore.QSize(75, 0))
-        self.fix_Ncells_radioButton.setMaximumSize(QtCore.QSize(75, 16777215))
+        self.fix_Ncells_radioButton.setMinimumSize(QtCore.QSize(60, 0))
+        self.fix_Ncells_radioButton.setMaximumSize(QtCore.QSize(60, 16777215))
         font = QtGui.QFont()
         font.setPointSize(20)
         self.fix_Ncells_radioButton.setFont(font)
@@ -374,8 +374,8 @@ class Ui_S4S(object):
         self.verticalLayout_3 = QtGui.QVBoxLayout()
         self.verticalLayout_3.setObjectName(_fromUtf8("verticalLayout_3"))
         self.label_43 = QtGui.QLabel(self.stackedWidgetPage1)
-        self.label_43.setMinimumSize(QtCore.QSize(300, 40))
-        self.label_43.setMaximumSize(QtCore.QSize(300, 40))
+        self.label_43.setMinimumSize(QtCore.QSize(275, 40))
+        self.label_43.setMaximumSize(QtCore.QSize(275, 40))
         font = QtGui.QFont()
         font.setPointSize(25)
         self.label_43.setFont(font)
@@ -400,7 +400,7 @@ class Ui_S4S(object):
         self.horizontalLayout_3.addWidget(self.L_lineEdit)
         self.label_44 = QtGui.QLabel(self.stackedWidgetPage1)
         font = QtGui.QFont()
-        font.setPointSize(25)
+        font.setPointSize(20)
         self.label_44.setFont(font)
         self.label_44.setObjectName(_fromUtf8("label_44"))
         self.horizontalLayout_3.addWidget(self.label_44)
@@ -414,8 +414,8 @@ class Ui_S4S(object):
         self.line_7.setObjectName(_fromUtf8("line_7"))
         self.horizontalLayout_48.addWidget(self.line_7)
         self.fix_tube_length_radioButton = QtGui.QRadioButton(self.stackedWidgetPage1)
-        self.fix_tube_length_radioButton.setMinimumSize(QtCore.QSize(75, 0))
-        self.fix_tube_length_radioButton.setMaximumSize(QtCore.QSize(75, 16777215))
+        self.fix_tube_length_radioButton.setMinimumSize(QtCore.QSize(60, 0))
+        self.fix_tube_length_radioButton.setMaximumSize(QtCore.QSize(60, 16777215))
         font = QtGui.QFont()
         font.setPointSize(20)
         self.fix_tube_length_radioButton.setFont(font)
@@ -748,7 +748,7 @@ class Ui_S4S(object):
         self.horizontalLayout_25.addItem(spacerItem24)
         self.verticalLayout_5.addLayout(self.horizontalLayout_25)
         self.horizontalLayout_26.addLayout(self.verticalLayout_5)
-        spacerItem25 = QtGui.QSpacerItem(16, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        spacerItem25 = QtGui.QSpacerItem(0, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_26.addItem(spacerItem25)
         self.stackedWidget.addWidget(self.stackedWidgetPage1)
         self.stackedWidgetPage2 = QtGui.QWidget()
@@ -766,7 +766,7 @@ class Ui_S4S(object):
         self.verticalLayout_7.addWidget(self.stackedWidget)
         S4S.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(S4S)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 867, 25))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 733, 25))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName(_fromUtf8("menuFile"))
