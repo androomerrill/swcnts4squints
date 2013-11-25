@@ -1,6 +1,9 @@
+from __future__ import absolute_import, print_function, division
+
 from PyQt4.QtGui import QApplication
 
-from s4s_view import S4SView
+from .s4s_view import S4SView
+
 
 class S4SController(object):
 

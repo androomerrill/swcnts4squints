@@ -458,7 +458,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="Natoms_per_cell_lineEdit_3">
+                 <widget class="QLineEdit" name="N_per_cell_lineEdit">
                   <property name="maximumSize">
                    <size>
                     <width>150</width>
@@ -585,7 +585,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDoubleSpinBox" name="ccbond_doubleSpinBox">
+                 <widget class="QDoubleSpinBox" name="bond_doubleSpinBox">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -845,7 +845,7 @@
                   <item>
                    <layout class="QHBoxLayout" name="horizontalLayout_3">
                     <item>
-                     <widget class="QLineEdit" name="L_lineEdit">
+                     <widget class="QLineEdit" name="tube_length_lineEdit">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                         <horstretch>0</horstretch>
@@ -967,7 +967,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="mass_lineEdit">
+                 <widget class="QLineEdit" name="tube_mass_lineEdit">
                   <property name="maximumSize">
                    <size>
                     <width>200</width>
@@ -1106,7 +1106,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QSpinBox" name="spinBox">
+                 <widget class="QSpinBox" name="Ntubes_mantissa_spinBox">
                   <property name="minimumSize">
                    <size>
                     <width>60</width>
@@ -1160,7 +1160,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QSpinBox" name="spinBox_2">
+                 <widget class="QSpinBox" name="Ntubes_exponent_spinBox">
                   <property name="minimumSize">
                    <size>
                     <width>60</width>
@@ -1210,7 +1210,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="mass_lineEdit_3">
+                 <widget class="QLineEdit" name="bundle_mass_lineEdit">
                   <property name="maximumSize">
                    <size>
                     <width>150</width>
