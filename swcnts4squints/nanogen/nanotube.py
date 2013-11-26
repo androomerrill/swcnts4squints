@@ -10,7 +10,6 @@ Nanotube structure tools (:mod:`tasr.tools.nanogen.nanotube`)
    :toctree: generated/
 
    Nanotube
-   NanotubeGenerator
 
 """
 from __future__ import division, print_function, absolute_import
@@ -23,11 +22,8 @@ from collections import OrderedDict
 
 import numpy as np
 
-from ..arrayfuncs import rotation_matrix
 from ..chemistry import Atom, Atoms
 from ..refdata import ccbond
-from ..strfuncs import plural_word_check
-from .structure_io import XYZWriter
 
 param_units = {}
 param_units['dt'] = \
@@ -53,8 +49,14 @@ param_strfmt['Ch'] = \
     param_strfmt['chiral_angle'] = '{:.2f}'
 param_strfmt['bond'] = '{:.3f}'
 
-__all__ = ['Nanotube', 'NanotubeGenerator',
-           'param_units', 'param_symbols', 'param_strfmt']
+mass_C = 12.0107
+gram_per_kilogram = 1e3
+kilogram_per_Dalton = 1.660538782e-27
+gram_per_Dalton = kilogram_per_Dalton * gram_per_kilogram
+cm_per_angstrom = 1e-8
+cgs_mass_C = mass_C * gram_per_Dalton
+
+__all__ = ['Nanotube', 'param_units', 'param_symbols', 'param_strfmt']
 
 
 class Nanotube(object):
@@ -144,8 +146,10 @@ class Nanotube(object):
     θᴄ: 0.00°
 
     """
-
-    def __init__(self, n=int, m=int, bond=ccbond, verbose=False):
+    def __init__(self, n=int, m=int, nxcells=1, nycells=1,
+                 nzcells=1, element1='C', element2='C',
+                 bond=ccbond, tube_length=None, autogen=True,
+                 verbose=False):
 
         self._params = OrderedDict()
 
@@ -170,6 +174,10 @@ class Nanotube(object):
         self._n = int(n)
         self._m = int(m)
         self._bond = float(bond)
+        self._element1 = element1
+        self._element2 = element2
+        self._nxcells = int(nxcells)
+        self._nycells = int(nycells)
         self._verbose = verbose
 
         self._d = None
@@ -187,6 +195,33 @@ class Nanotube(object):
         self._p = None
         self._q = None
         self._Natoms = None
+        self._Ntubes = self._nxcells * self._nycells
+
+        if tube_length is not None:
+            self._tube_length = float(tube_length)
+            self._nzcells = int(np.ceil(10 * self._tube_length / self._T))
+        else:
+            self._nzcells = int(nzcells)
+
+        self._tube_length = \
+            self.compute_tube_length(n=self._n,
+                                     m=self._m,
+                                     nzcells=self._nzcells,
+                                     bond=self._bond)
+
+        self._Natoms_per_tube = \
+            self.compute_Natoms_per_tube(n=self._n,
+                                         m=self._m,
+                                         nzcells=self._nzcells)
+
+        self._tube_mass = None
+        self._bundle_density = None
+        self._bundle_mass = None
+        self._Ntubes_mantissa = None
+        self._Ntubes_exponent = None
+
+        self.unit_cell = None
+        self.structure_atoms = None
 
         for k, v in self.__dict__.iteritems():
             p = k.strip('_')
@@ -198,6 +233,7 @@ class Nanotube(object):
                 else:
                     self._params[p]['var'] = p
 
+        print('computing tube_params')
         self._compute_tube_params()
 
     def _compute_tube_params(self):
@@ -216,6 +252,12 @@ class Nanotube(object):
         self._R = self.compute_R(n=self._n, m=self._m)
         self._M = self.compute_M(n=self._n, m=self._m)
         self._Natoms = self.compute_Natoms(n=self._n, m=self._m)
+        self._tube_mass = \
+            self.compute_tube_mass(n=self._n, m=self._m, nzcells=self._nzcells)
+        self._bundle_mass = self.compute_bundle_mass(n=self._n, m=self._m,
+                                                     nxcells=self._nxcells,
+                                                     nycells=self._nycells,
+                                                     nzcells=self._nzcells)
 
         for k, v in self.__dict__.iteritems():
             p = k.strip('_')
@@ -262,6 +304,34 @@ class Nanotube(object):
     def bond(self):
         """Bond length in **Angstroms**."""
         return self._bond
+
+    @property
+    def tube_mass(self):
+        """Tube mass in grams."""
+        return self._tube_mass
+
+    @classmethod
+    def compute_tube_mass(cls, n=int, m=int, nzcells=float):
+        Natoms_per_tube = \
+            Nanotube.compute_Natoms_per_tube(n=n, m=m, nzcells=nzcells)
+        return cgs_mass_C * Natoms_per_tube
+
+    @property
+    def bundle_mass(self):
+        """Bundle mass in grams."""
+        return self._bundle_mass
+
+    @classmethod
+    def compute_Ntubes(cls, nxcells=int, nycells=int):
+        return int(nxcells * nycells)
+
+    @classmethod
+    def compute_bundle_mass(cls, n=int, m=int, nxcells=int,
+                            nycells=int, nzcells=None):
+        """Bundle mass in grams."""
+        Ntubes = Nanotube.compute_Ntubes(nxcells=nxcells, nycells=nycells)
+        tube_mass = Nanotube.compute_tube_mass(n=n, m=m, nzcells=nzcells)
+        return Ntubes * tube_mass
 
     @property
     def t1(self):
@@ -716,99 +786,6 @@ class Nanotube(object):
         else:
             raise NanotubeError("Invalid parameters")
 
-
-class NanotubeGenerator(Nanotube):
-
-    """
-    Class for generating nanotube structures.
-
-    .. versionchanged:: 0.3.10
-
-       Changed to subclass of :class:`Nanotube`
-
-    Parameters
-    ----------
-    n, m : int
-        Chiral indices defining the nanotube chiral vector
-        :math:`\\mathbf{C}_{h} = n\\mathbf{a}_{1} + m\\mathbf{a}_{2} = (n, m)`.
-    nxcells, nycells, nzcells : int, optional
-        Number of repeat unit cells in the x,y,z directions
-    element1, element2 : {str, int}, optional
-        Element symbol or atomic number of basis atoms 1 and 2
-    bond : float, optional
-        :math:`\\mathrm{a}_{\\mathrm{CC}} =` distance between
-        nearest neighbor atoms. Must be in units of **Angstroms**.
-    tube_length : float, optional
-        Length of nanotube in units of **nanometers**.
-        Overrides the ``nzcells`` value.
-    autogen : bool, optional
-        if ``True``, automatically call
-        :py:meth:`~NanotubeGenerator.generate_unit_cell`,
-        followed by
-        :py:meth:`~NanotubeGenerator.generate_structure_data`.
-    verbose : bool, optional
-        if ``True``, show verbose output
-
-    Examples
-    --------
-    First, load the :py:class:`~tasr.tools.nanogen.NanoGenerator` class.
-
-    >>> from tasr.tools.nanogen import NanotubeGenerator
-
-    Now let's generate a :math:`\\mathbf{C}_{\\mathrm{h}} = (10, 5)`
-    SWCNT unit cell.
-
-    >>> nt = NanotubeGenerator(n=10, m=5)
-    >>> nt.save_data(fname='10,5_unit_cell.xyz')
-
-    The rendered structure looks like (orhographic view):
-
-    .. image:: /images/10,5_unit_cell_orthographic_view.png
-
-    and the perspective view:
-
-    .. image:: /images/10,5_unit_cell_perspective_view.png
-
-    """
-
-    def __init__(self, n=int, m=int, nxcells=1, nycells=1,
-                 nzcells=1, element1='C', element2='C',
-                 bond=ccbond, tube_length=None, autogen=True,
-                 verbose=False):
-
-        super(NanotubeGenerator, self).__init__(n=n, m=m, bond=bond)
-
-        self._element1 = element1
-        self._element2 = element2
-
-        self._nxcells = int(nxcells)
-        self._nycells = int(nycells)
-        self._Ntubes = self._nxcells * self._nycells
-
-        if tube_length is not None:
-            self._tube_length = float(tube_length)
-            self._nzcells = int(np.ceil(10 * self._tube_length / self._T))
-        else:
-            self._nzcells = int(nzcells)
-
-        self._tube_length = \
-            self.compute_tube_length(n=self._n,
-                                     m=self._m,
-                                     nzcells=self._nzcells,
-                                     bond=self._bond)
-
-        self._Natoms_per_tube = \
-            self.compute_Natoms_per_tube(n=self._n,
-                                         m=self._m,
-                                         nzcells=self._nzcells)
-
-        self.unit_cell = None
-        self.structure_atoms = None
-
-        if autogen:
-            self.generate_unit_cell()
-            self.generate_structure_data()
-
     def generate_unit_cell(self):
         """Generate the unit cell."""
         n = self._n
@@ -868,49 +845,6 @@ class NanotubeGenerator(Nanotube):
                 nt_atom.r = uc_atom.r + dr
                 self.structure_atoms.append(nt_atom)
 
-    def save_data(self, fname=None, structure_format='xyz',
-                  rotation_angle=None, rot_axis=None, deg2rad=True,
-                  center_CM=True):
-        """Save structure data.
-
-        Parameters
-        ----------
-        fname : str, optional
-            file name string
-        structure_format : str, optional
-            chemical file format of saved structure data.
-        rotation_angle : {None, float}, optional
-            Angle of rotation
-        rot_axis : {'x', 'y', 'z'}, optional
-            Rotation axis
-        deg2rad : bool, optional
-            Convert ``rotation_angle`` from degrees to radians.
-        center_CM : bool, optional
-            .. versionadded:: 0.3.21
-
-            Center center-of-mass on on origin.
-
-        """
-        #structure_atoms = list(itertools.chain(*self.structure_atoms))
-        structure_atoms = Atoms(self.structure_atoms)
-        if center_CM:
-            structure_atoms.center_CM(r_indices=[2])
-        if rotation_angle is not None:
-            R_matrix = rotation_matrix(rotation_angle,
-                                       rot_axis=rot_axis,
-                                       deg2rad=deg2rad)
-            structure_atoms.rotate(R_matrix)
-        if fname is None:
-            chirality = '{}{}r'.format('{}'.format(self._n).zfill(2),
-                                       '{}'.format(self._m).zfill(2))
-            nzcells = ''.join(('{}'.format(self._nzcells),
-                               plural_word_check('cell', self._nzcells)))
-            fname_wordlist = (chirality,
-                              '.'.join((nzcells, structure_format)))
-            fname = '_'.join(fname_wordlist)
-        if structure_format == 'xyz':
-            XYZWriter.write(fname=fname, atoms=structure_atoms)
-
     @property
     def Ntubes(self):
         """Number of nanotubes."""
@@ -922,7 +856,7 @@ class NanotubeGenerator(Nanotube):
         return self._Natoms_per_tube
 
     @classmethod
-    def compute_Natoms_per_tube(cls, n=int, m=int, nzcells=int):
+    def compute_Natoms_per_tube(cls, n=int, m=int, nzcells=float):
         """Compute :math:`N_{\\mathrm{atoms/tube}}`
 
         .. math::
@@ -962,10 +896,19 @@ class NanotubeGenerator(Nanotube):
         """Number of nanotube unit cells along the :math:`z`-axis."""
         return self._nzcells
 
+    @nzcells.setter
+    def nzcells(self, value):
+        self._nzcells = value
+        self._compute_tube_params()
+
     @property
     def tube_length(self):
         """Nanotube length :math:`L_{\\mathrm{tube}}` in **nanometers**."""
         return self._tube_length
+
+    @tube_length.setter
+    def tube_length(self, value):
+        self._tube_length = value
 
     @classmethod
     def compute_tube_length(cls, n=int, m=int, nzcells=int, bond=None):

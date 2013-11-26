@@ -716,7 +716,7 @@
                   <item>
                    <layout class="QHBoxLayout" name="horizontalLayout">
                     <item>
-                     <widget class="QDoubleSpinBox" name="Nz_unit_cells_doubleSpinBox">
+                     <widget class="QDoubleSpinBox" name="nzcells_doubleSpinBox">
                       <property name="minimumSize">
                        <size>
                         <width>200</width>
@@ -1275,7 +1275,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="density_lineEdit">
+                 <widget class="QLineEdit" name="bundle_density_lineEdit">
                   <property name="maximumSize">
                    <size>
                     <width>150</width>
