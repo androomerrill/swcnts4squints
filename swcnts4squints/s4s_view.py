@@ -44,9 +44,18 @@ class S4SView(QMainWindow, Ui_S4S):
     def on_nzcells_doubleSpinBox_valueChanged(self, value):
         self.model.nzcells = value
 
-    #@pyqtSlot(str)
-    #def on_L_lineEdit_textEdited(self, text):
-    #    self.model.L = float(text)
+    @pyqtSlot(int)
+    def on_fix_buttonGroup_buttonClicked(self):
+        if self.fix_Ncells_radioButton.isChecked():
+            self.model.fix_nzcells = True
+            self.model.fix_tube_length = False
+            self.nzcells_doubleSpinBox.setReadOnly(True)
+            self.tube_length_lineEdit.setReadOnly(False)
+        else:
+            self.model.fix_nzcells = False
+            self.model.fix_tube_length = True
+            self.nzcells_doubleSpinBox.setReadOnly(False)
+            self.tube_length_lineEdit.setReadOnly(True)
 
     @pyqtSlot()
     def on_tube_length_lineEdit_editingFinished(self):
@@ -71,21 +80,31 @@ class S4SView(QMainWindow, Ui_S4S):
     def update_app_view(self):
         self.n_spinBox.setValue(self.model.n)
         self.m_spinBox.setValue(self.model.m)
-        self.bond_doubleSpinBox.setValue(self.model.bond)
-        self.nzcells_doubleSpinBox.setValue(self.model.nzcells)
-        self.tube_length_lineEdit.setText('{:.3f}'.format(self.model.tube_length))
+
         self.Ch_lineEdit.setText('{:.3f}'.format(self.model.Ch))
-        self.chiral_angle_lineEdit.setText('{:.2f}'.format(self.model.chiral_angle))
         self.dt_lineEdit.setText('{:.3f}'.format(self.model.dt))
         self.T_lineEdit.setText('{:.3f}'.format(self.model.T))
+        self.chiral_angle_lineEdit.setText(
+            '{:.2f}'.format(self.model.chiral_angle))
+        self.N_lineEdit.setText(str(self.model.N))
+        self.Natoms_lineEdit.setText(str(self.model.Natoms))
+        self.bond_doubleSpinBox.setValue(self.model.bond)
+
+        self.nzcells_doubleSpinBox.setValue(self.model.nzcells)
+        self.tube_length_lineEdit.setText(
+            '{:.3f}'.format(self.model.tube_length))
+        self.tube_mass_lineEdit.setText(
+            '{:.3e}'.format(self.model.tube_mass))
+        self.Natoms_per_tube_lineEdit.setText(
+            str(self.model.Natoms_per_tube))
+        #self.Ntubes_mantissa_spinBox.setValue(
+        #    str(self.model.Ntubes))
+        self.bundle_mass_lineEdit.setText(
+            str(self.model.bundle_mass))
+        self.bundle_density_lineEdit.setText(
+            '{:.3f}'.format(self.model.bundle_density))
+
         self.d_lineEdit.setText(str(self.model.d))
         self.dR_lineEdit.setText(str(self.model.dR))
-        self.Natoms_per_cell_lineEdit.setText(str(self.model.Natoms))
-        self.Natoms_per_tube_lineEdit.setText(str(self.model.Natoms_per_tube))
         self.t1_lineEdit.setText(str(self.model.t1))
         self.t2_lineEdit.setText(str(self.model.t2))
-        self.p_lineEdit.setText(str(self.model.p))
-        self.q_lineEdit.setText(str(self.model.q))
-        self.M_lineEdit.setText(str(self.model.M))
-        self.tube_mass_lineEdit.setText('{:.4e}'.format(self.model.tube_mass))
-        self.bundle_density_lineEdit.setText('{:.3f}'.format(self.model.bundle_density))

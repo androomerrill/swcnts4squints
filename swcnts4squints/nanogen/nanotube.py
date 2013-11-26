@@ -233,8 +233,7 @@ class Nanotube(object):
                 else:
                     self._params[p]['var'] = p
 
-        print('computing tube_params')
-        self._compute_tube_params()
+        self.__compute_tube_params()
 
     def _compute_tube_params(self):
         self._d = self.compute_d(n=self._n, m=self._m)
@@ -244,20 +243,31 @@ class Nanotube(object):
 
         #Compute geometric properties
         self._Ch = self.compute_Ch(n=self._n, m=self._m, bond=self._bond)
-        self._T = self.compute_T(n=self._n, m=self._m, bond=self._bond)
+        print(self._Ch)
         self._dt = self.compute_dt(n=self._n, m=self._m, bond=self._bond)
         self._rt = self.compute_rt(n=self._n, m=self._m, bond=self._bond)
+        self._T = self.compute_T(n=self._n, m=self._m, bond=self._bond)
         self._chiral_angle = self.compute_chiral_angle(n=self._n, m=self._m)
         self._N = self.compute_N(n=self._n, m=self._m)
+        self._Natoms = self.compute_Natoms(n=self._n, m=self._m)
         self._R = self.compute_R(n=self._n, m=self._m)
         self._M = self.compute_M(n=self._n, m=self._m)
-        self._Natoms = self.compute_Natoms(n=self._n, m=self._m)
+        self._tube_length = self.compute_tube_length(n=self._n,
+                                                     m=self._m,
+                                                     nzcells=self._nzcells,
+                                                     bond=self._bond)
         self._tube_mass = \
             self.compute_tube_mass(n=self._n, m=self._m, nzcells=self._nzcells)
+        self._Natoms_per_tube = \
+            self.compute_Natoms_per_tube(n=self._n,
+                                         m=self._m,
+                                         nzcells=self._nzcells)
         self._bundle_mass = self.compute_bundle_mass(n=self._n, m=self._m,
                                                      nxcells=self._nxcells,
                                                      nycells=self._nycells,
                                                      nzcells=self._nzcells)
+        self._bundle_density = \
+            self.compute_bundle_density(n=self._n, m=self._m, bond=self._bond)
 
         for k, v in self.__dict__.iteritems():
             p = k.strip('_')
@@ -279,6 +289,8 @@ class Nanotube(object):
                         print(u"{}: {}{}".format(pvar, pval, punits))
                 else:
                     print(u"{}: {}".format(pvar, pval))
+
+    __compute_tube_params = _compute_tube_params
 
     @property
     def n(self):
@@ -305,6 +317,10 @@ class Nanotube(object):
         """Bond length in **Angstroms**."""
         return self._bond
 
+    @bond.setter
+    def bond(self, value):
+        self._bond = value
+
     @property
     def tube_mass(self):
         """Tube mass in grams."""
@@ -322,16 +338,35 @@ class Nanotube(object):
         return self._bundle_mass
 
     @classmethod
-    def compute_Ntubes(cls, nxcells=int, nycells=int):
-        return int(nxcells * nycells)
-
-    @classmethod
     def compute_bundle_mass(cls, n=int, m=int, nxcells=int,
                             nycells=int, nzcells=None):
         """Bundle mass in grams."""
         Ntubes = Nanotube.compute_Ntubes(nxcells=nxcells, nycells=nycells)
         tube_mass = Nanotube.compute_tube_mass(n=n, m=m, nzcells=nzcells)
         return Ntubes * tube_mass
+
+    @property
+    def bundle_density(self):
+        """Bundle density in grams/cm**3"""
+        return self._bundle_density
+
+    @classmethod
+    def compute_bundle_density(cls, n=int, m=int, bond=None):
+        m_C = cgs_mass_C
+        d_vdw = None
+        if bond is None:
+            bond = ccbond
+        if n == m:
+            d_vdw = 3.38
+        elif (m == 0) or (n == 0):
+            d_vdw = 3.41
+        else:
+            d_vdw = 3.39
+        bundle_density = 8 * pi**2 * m_C * np.sqrt(n**2 + m**2 + n*m) / \
+            (9 * np.sqrt(3) * (bond * 1e-8)**3 *
+                (np.sqrt(n**2 + m**2 + n*m) +
+                    pi * d_vdw / (np.sqrt(3) * bond))**2)
+        return bundle_density
 
     @property
     def t1(self):
@@ -850,6 +885,14 @@ class Nanotube(object):
         """Number of nanotubes."""
         return int(self._Ntubes)
 
+    @Ntubes.setter
+    def Ntubes(self, value):
+        self._Ntubes = value
+
+    @classmethod
+    def compute_Ntubes(cls, nxcells=int, nycells=int):
+        return int(nxcells * nycells)
+
     @property
     def Natoms_per_tube(self):
         """Number of atoms per nanotube :math:`N_{\\mathrm{atoms/tube}}`."""
@@ -911,7 +954,7 @@ class Nanotube(object):
         self._tube_length = value
 
     @classmethod
-    def compute_tube_length(cls, n=int, m=int, nzcells=int, bond=None):
+    def compute_tube_length(cls, n=int, m=int, nzcells=float, bond=None):
         """Compute :math:`L_{\\mathrm{tube}}`.
 
         Parameters

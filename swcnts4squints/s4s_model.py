@@ -15,11 +15,11 @@ swcnts4squints model (:mod:`swcnts4squints.s4s_model`)
 from __future__ import division, print_function, absolute_import
 __docformat__ = 'restructuredtext'
 
-from math import pi
+#from math import pi
 
 #from collections import OrderedDict
 
-import numpy as np
+#import numpy as np
 
 #from ..arrayfuncs import rotation_matrix
 #from ..chemistry import Atom, Atoms
@@ -37,16 +37,34 @@ class S4SModel(Nanotube):
 
         self.observers = []
 
-        super(S4SModel, self).__init__(n=10, m=10, verbose=True)
-        print(self.Ch)
+        super(S4SModel, self).__init__(n=10, m=10, nzcells=10, verbose=True)
+
+        self._fix_nzcells = True
+        self._fix_tube_length = False
 
     def init(self):
-        self._nzcells = 10
-        print(self.Ch)
+        #self._nzcells = 10
+        self.notify_observers()
 
     def _compute_tube_params(self):
-
+        super(S4SModel, self)._compute_tube_params()
         self.notify_observers()
+
+    @property
+    def fix_nzcells(self):
+        return self._fix_nzcells
+
+    @fix_nzcells.setter
+    def fix_nzcells(self, value):
+        self._fix_nzcells = value
+
+    @property
+    def fix_tube_length(self):
+        return self._fix_tube_length
+
+    @fix_tube_length.setter
+    def fix_tube_length(self, value):
+        self._fix_tube_length = value
 
     @property
     def n(self):
@@ -70,62 +88,49 @@ class S4SModel(Nanotube):
 
     @property
     def bond(self):
-        """Bond length in **Angstroms**."""
         return self._bond
 
     @bond.setter
     def bond(self, value):
         self._bond = value
+        self._compute_tube_params()
 
     @property
-    def bundle_density(self):
-        return self._bundle_density
+    def tube_length(self):
+        return self._tube_length
 
-    def compute_bundle_density(self):
-        a_CC = self._ccbond
-        m_C = self.cgs_mass_C
-        n = self._n
-        m = self._m
-        d_vdw = None
-        if self._n == self._m:
-            d_vdw = 3.38
-        elif (self._m == 0) or (self._n == 0):
-            d_vdw = 3.41
-        else:
-            d_vdw = 3.39
-        bundle_density = 8 * pi**2 * m_C * np.sqrt(n**2 + m**2 + n*m) / \
-            (9 * np.sqrt(3) * (a_CC * 1e-8)**3 *
-                (np.sqrt(n**2 + m**2 + n*m) +
-                    pi * d_vdw / (np.sqrt(3) * a_CC))**2)
-        return bundle_density
+    @tube_length.setter
+    def tube_length(self, value):
+        self._tube_length = value
+        self._compute_tube_params()
 
-    def _update_bond_length_dependents(self):
-        self._Ch = self.compute_Ch()
-        self._dt = self._Ch / pi
-        self._bundle_density = self.compute_bundle_density()
-        self._T = self.compute_T()
-        self.notify_observers()
+    #def _update_bond_length_dependents(self):
+    #    self._Ch = self.compute_Ch()
+    #    self._dt = self._Ch / pi
+    #    self._bundle_density = self.compute_bundle_density()
+    #    self._T = self.compute_T()
+    #    self.notify_observers()
 
-    def _update_Ch_dependents(self):
-        self._d = self.compute_d()
-        self._dR = self.compute_dR()
-        self._Ch = self.compute_Ch()
-        self._dt = self._Ch / pi
-        self._T = self.compute_T()
-        self._N = self._Nhexs_per_cell = self.compute_Nhexs_per_cell()
-        self._Natoms = self.compute_Natoms()
-        self._bundle_density = self.compute_bundle_density()
-        self._t1 = self.compute_t1()
-        self._t2 = self.compute_t2()
-        self._M, self._p, self._q = self.compute_R()
-        self._chiral_angle = self.compute_chiral_angle()
+    #def _update_Ch_dependents(self):
+    #    self._d = self.compute_d()
+    #    self._dR = self.compute_dR()
+    #    self._Ch = self.compute_Ch()
+    #    self._dt = self._Ch / pi
+    #    self._T = self.compute_T()
+    #    self._N = self._Nhexs_per_cell = self.compute_Nhexs_per_cell()
+    #    self._Natoms = self.compute_Natoms()
+    #    self._bundle_density = self.compute_bundle_density()
+    #    self._t1 = self.compute_t1()
+    #    self._t2 = self.compute_t2()
+    #    self._M, self._p, self._q = self.compute_R()
+    #    self._chiral_angle = self.compute_chiral_angle()
 
-    def _update_Nz_unit_cells(self, Ncells=None):
-        if Ncells is None:
-            #self._Nz_unit_cells = int(ceil(10 * self._L / self._T))
-            self._nzcells = 10 * self._L / self._T
-        else:
-            self._nzcells = Ncells
+    #def _update_Nz_unit_cells(self, Ncells=None):
+    #    if Ncells is None:
+    #        #self._Nz_unit_cells = int(ceil(10 * self._L / self._T))
+    #        self._nzcells = 10 * self._L / self._T
+    #    else:
+    #        self._nzcells = Ncells
         #self._update_Natoms_per_tube()
         #self._update_tube_mass()
 

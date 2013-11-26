@@ -17,7 +17,7 @@ if sys.platform == 'win32':
         if f.endswith('.py'):
             shutil.copyfile(fpath, f)
             py_files.append(f)
-            
+
     extra_options = dict(setup_requires=['py2exe'],
                          console=['swcnts4squints.py'],
                          options={'py2exe': {
@@ -29,9 +29,9 @@ if sys.platform == 'win32':
                                     "includes": ["sip", "PyQt4.QtCore",
                                                  "PyQt4.QtGui"]}},
                          windows=[{"script": "swcnts4squints.py",
-                                   "icon_resources": 
-                                        [(1, "images/swcnts4squints.ico")]}],                        
-                         data_files=[("phonon_backend", 
+                                   "icon_resources":
+                                        [(1, "images/swcnts4squints.ico")]}],
+                         data_files=[("phonon_backend",
                         ["C:\Python27\Lib\site-packages\PyQt4\plugins\phonon_backend\phonon_ds94.dll"])])
 
     setup(name='swcnts4squints',
@@ -57,10 +57,10 @@ if sys.platform == 'win32':
             },
           **extra_options
     )
-    
+
     for f in py_files:
         os.remove(f)
-                         
+
 else:
     extra_options = {}
     if sys.platform == 'darwin':
@@ -69,7 +69,7 @@ else:
                              options={'py2app': {"argv_emulation": True,
                                                  "iconfile": 'images/swcnts4squints.icns',
                                                  "includes": ['sip', 'PyQt4.QtCore', 'PyQt4.QtGui']}})
-                                            
+
     setup(name='swcnts4squints',
           version=0.5,
           description="python scripts",
