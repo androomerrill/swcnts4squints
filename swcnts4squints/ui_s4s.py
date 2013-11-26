@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'swcnts4squints2.ui'
 #
-# Created: Mon Nov 25 16:39:22 2013
+# Created: Tue Nov 26 10:57:41 2013
 #      by: PyQt4 UI code generator 4.10.3
 #
 # WARNING! All changes made in this file will be lost!
