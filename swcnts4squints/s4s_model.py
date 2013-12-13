@@ -30,8 +30,8 @@ class S4SModel(NanotubeBundle):
         #self._nzcells = 10
         self.notify_observers()
 
-    def _compute_tube_params(self):
-        super(S4SModel, self).compute_tube_params()
+    def _compute_bundle_params(self):
+        super(S4SModel, self).compute_bundle_params()
         self.notify_observers()
 
     @property
@@ -58,7 +58,7 @@ class S4SModel(NanotubeBundle):
     @n.setter
     def n(self, value):
         self._n = int(value)
-        self._compute_tube_params()
+        self._compute_bundle_params()
 
     @property
     def m(self):
@@ -68,7 +68,7 @@ class S4SModel(NanotubeBundle):
     @m.setter
     def m(self, value):
         self._m = int(value)
-        self._compute_tube_params()
+        self._compute_bundle_params()
 
     @property
     def bond(self):
@@ -77,7 +77,7 @@ class S4SModel(NanotubeBundle):
     @bond.setter
     def bond(self, value):
         self._bond = value
-        self._compute_tube_params()
+        self._compute_bundle_params()
 
     @property
     def tube_length(self):
@@ -86,7 +86,27 @@ class S4SModel(NanotubeBundle):
     @tube_length.setter
     def tube_length(self, value):
         self._tube_length = value
-        self._compute_tube_params()
+        self._compute_bundle_params()
+
+    @property
+    def nzcells(self):
+        return self._nzcells
+
+    @nzcells.setter
+    def nzcells(self, value):
+        self._nzcells = value
+        self._compute_bundle_params()
+
+    @property
+    def Ntubes(self):
+        return self._Ntubes
+
+    @Ntubes.setter
+    def Ntubes(self, value=int):
+        self._Ntubes = value
+        self._nxcells = value
+        self._nycells = 1
+        self._compute_bundle_params()
 
     #def _update_bond_length_dependents(self):
     #    self._Ch = self.compute_Ch()
