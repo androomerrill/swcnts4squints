@@ -1,1 +1,3 @@
-#__all__ = ['s4s_controller', 's4s_model', 's4s_view', 'swcnts4squints', 'ui_s4s.py']
+from __future__ import print_function, absolute_import
+
+__all__ = [s for s in dir() if not s.startswith('_')]
