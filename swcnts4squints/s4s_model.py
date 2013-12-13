@@ -6,32 +6,16 @@ swcnts4squints model (:mod:`swcnts4squints.s4s_model`)
 
 .. currentmodule:: swcnts4squints.s4s_model
 
-.. autosummary::
-   :toctree: generated/
-
-   Nanotube
-
 """
 from __future__ import division, print_function, absolute_import
 __docformat__ = 'restructuredtext'
 
-#from math import pi
-
-#from collections import OrderedDict
-
-#import numpy as np
-
-#from ..arrayfuncs import rotation_matrix
-#from ..chemistry import Atom, Atoms
-#from ..refdata import ccbond
-#from .structure_io import XYZWriter
-
-from .nanogen import Nanotube
+from sknano.nanogen import NanotubeBundle
 
 __all__ = ['S4SModel']
 
 
-class S4SModel(Nanotube):
+class S4SModel(NanotubeBundle):
 
     def __init__(self):
 
@@ -47,7 +31,7 @@ class S4SModel(Nanotube):
         self.notify_observers()
 
     def _compute_tube_params(self):
-        super(S4SModel, self)._compute_tube_params()
+        super(S4SModel, self).compute_tube_params()
         self.notify_observers()
 
     @property
