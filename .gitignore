@@ -21,6 +21,7 @@ dist
 *.egg-info
 # tox testing tool
 .tox
+swcnts4squints/version.py
 
 
 # Packages #
