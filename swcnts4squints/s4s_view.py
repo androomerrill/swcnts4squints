@@ -1,4 +1,14 @@
-from __future__ import absolute_import, print_function, division
+# -*- coding: utf-8 -*-
+"""
+=============================================================
+swcnts4squints view (:mod:`swcnts4squints.s4s_view`)
+=============================================================
+
+.. currentmodule:: swcnts4squints.s4s_view
+
+"""
+from __future__ import division, print_function, absolute_import
+__docformat__ = 'restructuredtext'
 
 from PyQt4.QtCore import pyqtSlot
 from PyQt4.QtGui import QMainWindow
@@ -9,7 +19,14 @@ __all__ = ['S4SView']
 
 
 class S4SView(QMainWindow, Ui_S4S):
+    """swcnts4squints MVC view class.
 
+    Parameters
+    ----------
+    controller : :py:class:`swcnts4squints.s4s_controller` instance
+    model : :py:class:`swcnts4squints.s4s_model` instance
+
+    """
     def __init__(self, controller=None, model=None):
         self.controller = controller
         self.model = model

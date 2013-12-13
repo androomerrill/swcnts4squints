@@ -16,11 +16,10 @@ __all__ = ['S4SModel']
 
 
 class S4SModel(NanotubeBundle):
-
+    """swcnts4squints MVC model class."""
     def __init__(self):
 
         self.observers = []
-
         super(S4SModel, self).__init__(n=10, m=10, nzcells=10, verbose=True)
 
         self._fix_nzcells = True
