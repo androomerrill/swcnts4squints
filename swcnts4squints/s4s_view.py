@@ -8,6 +8,8 @@ swcnts4squints view (:mod:`swcnts4squints.s4s_view`)
 
 """
 from __future__ import division, print_function, absolute_import
+from __future__ import unicode_literals
+from builtins import str
 __docformat__ = 'restructuredtext'
 
 from PyQt4.QtCore import pyqtSlot

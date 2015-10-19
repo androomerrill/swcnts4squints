@@ -8,6 +8,7 @@ swcnts4squints model (:mod:`swcnts4squints.s4s_model`)
 
 """
 from __future__ import division, print_function, absolute_import
+from __future__ import unicode_literals
 __docformat__ = 'restructuredtext'
 
 from sknano.nanogen import NanotubeBundle

@@ -1,6 +1,8 @@
 """SWCNTS4SQUINTS: interactive app for calculating nanotube properties.
 
 """
+from __future__ import unicode_literals
+from builtins import str
 
 DOCLINES = __doc__.split("\n")
 

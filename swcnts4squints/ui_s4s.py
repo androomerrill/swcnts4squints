@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+from builtins import object
 # -*- coding: utf-8 -*-
 
 # Form implementation generated from reading ui file 'swcnts4squints2.ui'

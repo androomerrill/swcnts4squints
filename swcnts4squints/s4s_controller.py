@@ -8,6 +8,8 @@ swcnts4squints controller (:mod:`swcnts4squints.s4s_controller`)
 
 """
 from __future__ import absolute_import, print_function, division
+from __future__ import unicode_literals
+from builtins import object
 
 from PyQt4.QtGui import QApplication
 

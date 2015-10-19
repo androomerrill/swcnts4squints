@@ -9,6 +9,8 @@ swcnts4squints CLI (:mod:`swcnts4squints.swcnts4squints`)
 
 """
 from __future__ import absolute_import, print_function, division
+from __future__ import unicode_literals
+from builtins import object
 
 import sys
 
