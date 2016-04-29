@@ -138,11 +138,8 @@ def setup_package():
              exclude_package_data={'':
                  ['README', 'README.rst', '*.gif', '*.html', '*.ui']},
              zip_safe=False,
-             dependency_links=[
-                 'https://github.com/androomerrill/scikit-nano/tarball/' +
-                 'master#egg=sknano-0.2.2'],
              install_requires=['numpy>=1.7', 'scipy>=0.12',
-                               'sknano>=0.2.2.dev'],
+                               'scikit-nano==0.2.25'],
              )
 
     extra_options = {}
