@@ -10,4 +10,4 @@ on these calculations.
 
 [Download the notes in pdf format][dropbox link to notes].
 
-[dropbox link to notes]: https://www.dropbox.com/s/9t6ducikkx9jfzy/bundle_calcs-round1.pdf
+[dropbox link to notes]: https://www.dropbox.com/s/2mt3ci92kmk8r88/bundle_calcs-round1.pdf
